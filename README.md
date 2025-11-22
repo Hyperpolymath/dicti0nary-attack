@@ -6,6 +6,8 @@ Everyone knows that it's easy to crack a password if it appears in a dictionary.
 
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 [![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
+[![RSR Compliance](https://img.shields.io/badge/RSR-Bronze%20(86%25)-yellow.svg)](RSR_COMPLIANCE.md)
+[![Offline-First](https://img.shields.io/badge/offline--first-100%25-green.svg)](RSR_COMPLIANCE.md#5-offline-first--compliant)
 
 ## ⚠️ Legal Notice
 
@@ -47,6 +49,9 @@ Unauthorized access to computer systems is **illegal** and may result in crimina
 - 🐳 **Docker Support**: Containerized deployment
 - 🧪 **Extensive Test Suite**: High code coverage with pytest
 - ⚡ **Performance Benchmarks**: Built-in benchmarking tools
+- 🏆 **RSR Framework Compliant**: Bronze level (86% compliance)
+- 📴 **Offline-First**: Core functionality works without internet
+- 🔒 **Security-First**: RFC 9116 compliant, comprehensive security policy
 
 ## 📦 Installation
 
@@ -139,7 +144,11 @@ Visit http://localhost:5000 in your browser.
 
 - [Usage Guide](docs/USAGE.md) - Comprehensive usage instructions
 - [API Documentation](docs/API.md) - Python API reference
+- [Plugin Guide](docs/PLUGINS.md) - Plugin development guide
 - [Configuration Guide](config/README.md) - Configuration options
+- [RSR Compliance](RSR_COMPLIANCE.md) - Standards compliance report
+- [Security Policy](SECURITY.md) - Vulnerability reporting
+- [Contributing](CONTRIBUTING.md) - Contribution guidelines
 
 ## 🎯 Use Cases
 
