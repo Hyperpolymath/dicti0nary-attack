@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>dicti0nary-attack - Non-Dictionary Password Tool</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .warning {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .tab {
+            background: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 10px 10px 0 0;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+
+        .tab.active {
+            background: white;
+            color: #667eea;
+        }
+
+        .tab:not(.active) {
+            background: rgba(255, 255, 255, 0.7);
+            color: #666;
+        }
+
+        .tab:hover {
+            background: white;
+        }
+
+        .content {
+            background: white;
+            padding: 30px;
+            border-radius: 0 10px 10px 10px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 5px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        .results {
+            margin-top: 30px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 5px;
+            display: none;
+        }
+
+        .results.show {
+            display: block;
+        }
+
+        .password-list {
+            max-height: 400px;
+            overflow-y: auto;
+            background: white;
+            padding: 15px;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+        }
+
+        .password-item {
+            padding: 8px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 20px;
+            border-radius: 5px;
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 32px;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .stat-label {
+            color: #666;
+            margin-top: 5px;
+        }
+
+        .success {
+            background: #d4edda;
+            border-left: 4px solid #28a745;
+            padding: 15px;
+            border-radius: 4px;
+            margin: 15px 0;
+        }
+
+        .error {
+            background: #f8d7da;
+            border-left: 4px solid #dc3545;
+            padding: 15px;
+            border-radius: 4px;
+            margin: 15px 0;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 20px;
+            display: none;
+        }
+
+        .loading.show {
+            display: block;
+        }
+
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔐 dicti0nary-attack</h1>
+            <p>Non-Dictionary Password Research Tool</p>
+            <div class="warning">
+                <strong>⚠️ Legal Notice:</strong> This tool is for authorized security testing only.
+                Unauthorized access to computer systems is illegal. Use only with explicit permission.
+            </div>
+        </div>
+
+        <div class="tabs">
+            <button class="tab active" onclick="switchTab('generate')">Generate Passwords</button>
+            <button class="tab" onclick="switchTab('hash')">Hash Password</button>
+            <button class="tab" onclick="switchTab('crack')">Crack Hash</button>
+        </div>
+
+        <div class="content">
+            <!-- Generate Tab -->
+            <div id="generate-tab" class="tab-content active">
+                <h2>Generate Non-Dictionary Passwords</h2>
+                <form onsubmit="generatePasswords(event)">
+                    <div class="form-group">
+                        <label for="gen-generator">Generator Type:</label>
+                        <select id="gen-generator">
+                            <option value="leetspeak">Leetspeak (a→4, e→3)</option>
+                            <option value="phonetic">Phonetic (for→4, to→2)</option>
+                            <option value="pattern">Pattern (keyboard walks, sequences)</option>
+                            <option value="random">Random</option>
+                            <option value="markov">Markov Chain</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="gen-count">Number of Passwords:</label>
+                        <input type="number" id="gen-count" value="100" min="1" max="10000">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="gen-min">Minimum Length:</label>
+                        <input type="number" id="gen-min" value="6" min="1" max="50">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="gen-max">Maximum Length:</label>
+                        <input type="number" id="gen-max" value="16" min="1" max="50">
+                    </div>
+
+                    <button type="submit">Generate Passwords</button>
+                </form>
+
+                <div id="gen-loading" class="loading">
+                    <div class="spinner"></div>
+                    <p>Generating passwords...</p>
+                </div>
+
+                <div id="gen-results" class="results">
+                    <h3>Generated Passwords</h3>
+                    <div id="gen-password-list" class="password-list"></div>
+                    <div class="stats">
+                        <div class="stat-card">
+                            <div class="stat-value" id="gen-stat-count">0</div>
+                            <div class="stat-label">Generated</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value" id="gen-stat-filtered">0</div>
+                            <div class="stat-label">Filtered</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Hash Tab -->
+            <div id="hash-tab" class="tab-content">
+                <h2>Hash a Password</h2>
+                <form onsubmit="hashPassword(event)">
+                    <div class="form-group">
+                        <label for="hash-password">Password:</label>
+                        <input type="text" id="hash-password" placeholder="Enter password to hash" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="hash-algorithm">Algorithm:</label>
+                        <select id="hash-algorithm">
+                            <option value="md5">MD5</option>
+                            <option value="sha1">SHA1</option>
+                            <option value="sha256" selected>SHA256</option>
+                            <option value="sha512">SHA512</option>
+                        </select>
+                    </div>
+
+                    <button type="submit">Hash Password</button>
+                </form>
+
+                <div id="hash-results" class="results">
+                    <div class="success">
+                        <strong>Hash Generated:</strong>
+                        <div style="margin-top: 10px; font-family: 'Courier New', monospace; word-break: break-all;" id="hash-output"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Crack Tab -->
+            <div id="crack-tab" class="tab-content">
+                <h2>Crack a Password Hash</h2>
+                <form onsubmit="crackHash(event)">
+                    <div class="form-group">
+                        <label for="crack-hash">Hash:</label>
+                        <input type="text" id="crack-hash" placeholder="Enter hash to crack" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="crack-algorithm">Algorithm:</label>
+                        <select id="crack-algorithm">
+                            <option value="md5">MD5</option>
+                            <option value="sha1">SHA1</option>
+                            <option value="sha256" selected>SHA256</option>
+                            <option value="sha512">SHA512</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="crack-generator">Generator:</label>
+                        <select id="crack-generator">
+                            <option value="pattern" selected>Pattern</option>
+                            <option value="leetspeak">Leetspeak</option>
+                            <option value="phonetic">Phonetic</option>
+                            <option value="random">Random</option>
+                            <option value="markov">Markov</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="crack-max">Max Attempts:</label>
+                        <input type="number" id="crack-max" value="10000" min="100" max="50000">
+                    </div>
+
+                    <button type="submit">Crack Hash</button>
+                </form>
+
+                <div id="crack-loading" class="loading">
+                    <div class="spinner"></div>
+                    <p>Cracking hash...</p>
+                </div>
+
+                <div id="crack-results" class="results"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function switchTab(tab) {
+            // Hide all tabs
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            document.querySelectorAll('.tab').forEach(button => {
+                button.classList.remove('active');
+            });
+
+            // Show selected tab
+            document.getElementById(tab + '-tab').classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        async function generatePasswords(event) {
+            event.preventDefault();
+
+            const loading = document.getElementById('gen-loading');
+            const results = document.getElementById('gen-results');
+
+            loading.classList.add('show');
+            results.classList.remove('show');
+
+            const data = {
+                generator: document.getElementById('gen-generator').value,
+                count: parseInt(document.getElementById('gen-count').value),
+                min_length: parseInt(document.getElementById('gen-min').value),
+                max_length: parseInt(document.getElementById('gen-max').value)
+            };
+
+            try {
+                const response = await fetch('/api/generate', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+
+                const result = await response.json();
+
+                if (response.ok) {
+                    const passwordList = document.getElementById('gen-password-list');
+                    passwordList.innerHTML = result.passwords
+                        .map((pwd, i) => `<div class="password-item">${i + 1}. ${pwd}</div>`)
+                        .join('');
+
+                    document.getElementById('gen-stat-count').textContent = result.stats.generated || 0;
+                    document.getElementById('gen-stat-filtered').textContent = result.stats.filtered || 0;
+
+                    results.classList.add('show');
+                } else {
+                    alert('Error: ' + result.error);
+                }
+            } catch (error) {
+                alert('Error: ' + error.message);
+            } finally {
+                loading.classList.remove('show');
+            }
+        }
+
+        async function hashPassword(event) {
+            event.preventDefault();
+
+            const data = {
+                password: document.getElementById('hash-password').value,
+                algorithm: document.getElementById('hash-algorithm').value
+            };
+
+            try {
+                const response = await fetch('/api/hash', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+
+                const result = await response.json();
+
+                if (response.ok) {
+                    document.getElementById('hash-output').textContent = result.hash;
+                    document.getElementById('hash-results').classList.add('show');
+                } else {
+                    alert('Error: ' + result.error);
+                }
+            } catch (error) {
+                alert('Error: ' + error.message);
+            }
+        }
+
+        async function crackHash(event) {
+            event.preventDefault();
+
+            const loading = document.getElementById('crack-loading');
+            const results = document.getElementById('crack-results');
+
+            loading.classList.add('show');
+            results.classList.remove('show');
+
+            const data = {
+                hash: document.getElementById('crack-hash').value,
+                algorithm: document.getElementById('crack-algorithm').value,
+                generator: document.getElementById('crack-generator').value,
+                max_attempts: parseInt(document.getElementById('crack-max').value)
+            };
+
+            try {
+                const response = await fetch('/api/crack', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+
+                const result = await response.json();
+
+                if (response.ok) {
+                    if (result.found) {
+                        results.innerHTML = `
+                            <div class="success">
+                                <h3>✓ Hash Cracked!</h3>
+                                <p><strong>Password:</strong> ${result.password}</p>
+                                <p><strong>Attempts:</strong> ${result.stats.attempts}</p>
+                                <p><strong>Time:</strong> ${result.stats.elapsed_time ? result.stats.elapsed_time.toFixed(2) + 's' : 'N/A'}</p>
+                            </div>
+                        `;
+                    } else {
+                        results.innerHTML = `
+                            <div class="error">
+                                <h3>✗ Hash Not Cracked</h3>
+                                <p><strong>Attempts:</strong> ${result.stats.attempts}</p>
+                                <p>Try increasing max attempts or using a different generator.</p>
+                            </div>
+                        `;
+                    }
+                    results.classList.add('show');
+                } else {
+                    alert('Error: ' + result.error);
+                }
+            } catch (error) {
+                alert('Error: ' + error.message);
+            } finally {
+                loading.classList.remove('show');
+            }
+        }
+    </script>
+</body>
+</html>
