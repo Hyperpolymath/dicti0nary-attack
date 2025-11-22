@@ -1,0 +1,176 @@
+# Changelog
+
+All notable changes to this project will be documented in this file.
+
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
+and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+## [Unreleased]
+
+### Planned
+- Plugin marketplace for community generators
+- Advanced Markov chain training features
+- GPU acceleration for hash cracking
+- Additional hash algorithm support (bcrypt, scrypt, Argon2)
+- Distributed cracking across multiple nodes
+- Machine learning-based password pattern analysis
+
+## [0.1.0] - 2025-11-22
+
+### Added
+- **Password Generators**
+  - LeetspeakGenerator with configurable substitutions (a→4, e→3, etc.)
+  - PhoneticGenerator for phonetic substitutions (for→4, to→2, you→u)
+  - PatternGenerator for keyboard walks, sequences, and date patterns
+  - RandomGenerator for truly random non-dictionary passwords
+  - MarkovGenerator for statistical password generation
+  - Base generator class with filtering and statistics
+
+- **Hash Cracking**
+  - Multi-algorithm support (MD5, SHA1, SHA224, SHA256, SHA384, SHA512, BLAKE2b, BLAKE2s)
+  - Serial cracking mode
+  - Parallel cracking mode with configurable workers
+  - Batch processing for multiple hashes
+  - Progress tracking and statistics
+  - Callback support for real-time notifications
+
+- **Command-Line Interface**
+  - Rich terminal UI with progress bars and tables
+  - `generate` command for password generation
+  - `crack` command for hash cracking
+  - `create-wordlist` command for wordlist generation
+  - `hash-password` command for testing
+  - `info` command for displaying available generators and algorithms
+  - Configuration file support (YAML/JSON)
+  - Verbose logging option
+
+- **Web Interface**
+  - Flask-based web application
+  - Responsive HTML/CSS UI
+  - Password generation interface
+  - Hash cracking interface
+  - Password hashing tool
+  - REST API endpoints
+  - Real-time progress tracking
+
+- **Utilities**
+  - WordlistManager for loading, saving, filtering, and merging wordlists
+  - ConfigManager for YAML/JSON configuration handling
+  - OutputFormatter for multiple output formats (text, JSON, CSV, HTML)
+
+- **Testing**
+  - Comprehensive pytest test suite (50+ tests)
+  - Generator tests for all 5 generators
+  - Hash cracker tests
+  - Utility module tests
+  - Test fixtures and configurations
+  - Code coverage reporting
+
+- **Documentation**
+  - Complete README with installation and usage instructions
+  - Usage guide (docs/USAGE.md)
+  - API documentation (docs/API.md)
+  - Plugin development guide (docs/PLUGINS.md)
+  - Contributing guidelines (CONTRIBUTING.md)
+  - Code of Conduct (CODE_OF_CONDUCT.md)
+  - Security policy (SECURITY.md)
+  - Maintainers guide (MAINTAINERS.md)
+
+- **Configuration**
+  - Default configuration (config/default.yaml)
+  - Advanced configuration (config/advanced.yaml)
+  - Configuration documentation
+  - Environment variable support
+
+- **Deployment**
+  - Dockerfile for containerization
+  - Docker Compose configuration
+  - CI/CD pipeline (GitHub Actions)
+  - Multi-version Python testing (3.10, 3.11, 3.12)
+  - Security scanning (Bandit, Safety)
+  - Code coverage integration
+
+- **Development Tools**
+  - Comprehensive Makefile
+  - Benchmarking module for performance testing
+  - Plugin system for extensibility
+  - Example wordlists
+
+- **Example Data**
+  - Common non-dictionary passwords wordlist
+  - Phonetic variations wordlist
+  - Keyboard walk patterns wordlist
+
+### Security
+- Input validation for all user inputs
+- No secrets in source code
+- Secure default configurations
+- Offline-first design (no unnecessary network calls)
+- Safe file handling with path validation
+
+### Performance
+- Parallel processing support for hash cracking
+- Iterator-based password generation for memory efficiency
+- Configurable batch sizes for optimization
+- Built-in benchmarking tools
+
+## Project Milestones
+
+### [0.2.0] - Planned
+- Enhanced plugin system
+- Additional hash algorithms
+- Improved web interface
+- Performance optimizations
+- Extended documentation
+
+### [0.3.0] - Planned
+- Distributed cracking support
+- Advanced pattern recognition
+- Machine learning integration
+- Database backend for results
+
+### [1.0.0] - Planned
+- Production-ready release
+- Full feature set
+- Comprehensive testing
+- Performance tuning
+- Enterprise features
+
+## Versioning Policy
+
+We use [Semantic Versioning](https://semver.org/):
+
+- **MAJOR** version for incompatible API changes
+- **MINOR** version for backwards-compatible functionality additions
+- **PATCH** version for backwards-compatible bug fixes
+
+## Release Process
+
+1. Update CHANGELOG.md
+2. Update version in setup.py and __init__.py
+3. Run full test suite
+4. Create Git tag
+5. Build and publish to PyPI
+6. Create GitHub release
+7. Announce on community channels
+
+## Contributing
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for how to contribute changes.
+
+## Security Updates
+
+Security fixes are released as patch versions as soon as possible after discovery. See [SECURITY.md](SECURITY.md) for reporting vulnerabilities.
+
+---
+
+**Legend**:
+- `Added` for new features
+- `Changed` for changes in existing functionality
+- `Deprecated` for soon-to-be removed features
+- `Removed` for now removed features
+- `Fixed` for any bug fixes
+- `Security` for vulnerability fixes
+
+[Unreleased]: https://github.com/Hyperpolymath/dicti0nary-attack/compare/v0.1.0...HEAD
+[0.1.0]: https://github.com/Hyperpolymath/dicti0nary-attack/releases/tag/v0.1.0
